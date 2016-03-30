@@ -1,9 +1,5 @@
 package com.example.damianmichalak.saper;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.util.Log;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -12,9 +8,7 @@ import java.util.List;
 @SuppressWarnings("ConstantConditions")
 public class LogicHelper implements View.OnClickListener, View.OnLongClickListener {
 
-    private Context context;
     private GameMode gameMode;
-    private final SharedPreferences preferences;
 
     public void setListener(ViewListener listener) {
         this.listener = listener;
@@ -22,33 +16,87 @@ public class LogicHelper implements View.OnClickListener, View.OnLongClickListen
 
     private ViewListener listener;
 
-    public LogicHelper(Activity context, GameMode gameMode) {
-        this.context = context;
+    public LogicHelper(GameMode gameMode) {
         this.gameMode = gameMode;
-        preferences = context.getPreferences(Context.MODE_PRIVATE);
-        Log.d("CHUJ", "" + gameMode.toString());
     }
 
     @Override
     public void onClick(View v) {
+        if (gameMode.getState() != GameMode.State.UNKNOWN) return;
+
         final Field field = getFieldFromPrefs((SaperField) v);
 
         if (!field.isMarked() && !field.isRevealed()) {
-            revealField(field);
+            if (!revealField(field)) {
+                gameMode.setState(GameMode.State.FAIL);
+                listener.gameFail();
+            }
         }
 
         if (listener != null) {
             listener.update(gameMode.getFields());
         }
 
+        checkAllBombsDetected();
     }
 
-    private void revealField(Field field) {
+    @Override
+    public boolean onLongClick(View v) {
+        if (gameMode.getState() != GameMode.State.UNKNOWN) return true;
+
+        final Field field = getFieldFromPrefs((SaperField) v);
+
+        if (field.isRevealed()) {
+            return true;
+        } else {
+            field.setMarked(!field.isMarked());
+        }
+
+        if (listener != null) {
+            listener.update(gameMode.getFields());
+        }
+
+        checkAllBombsDetected();
+
+        return true;
+    }
+
+    /**
+     * @return true if field is NOT A BOMB
+     */
+    private boolean revealField(Field field) {
         final int bombsNear = getNearBombs(field);
         field.setRevealed(true);
         field.setBombsNear(bombsNear);
 
         revealNearFields(field);
+
+        return !field.isBomb();
+    }
+
+    private void checkAllBombsDetected() {
+        boolean allBombsDetected = true;
+
+        for (Field field : gameMode.getFieldsBombs()) {
+            if (!field.isMarked()) {
+                allBombsDetected = false;
+                break;
+            }
+        }
+
+        for (int i = 0; i < gameMode.getSize(); i++) {
+            for (int j = 0; j < gameMode.getSize(); j++) {
+                if (!gameMode.getFields()[i][j].isBomb() && !gameMode.getFields()[i][j].isRevealed()) {
+                    allBombsDetected = false;
+                    break;
+                }
+            }
+        }
+
+        if (allBombsDetected) {
+            gameMode.setState(GameMode.State.SUCCESS);
+            listener.gameSuccess();
+        }
     }
 
     private void revealNearFields(Field field) {
@@ -76,23 +124,6 @@ public class LogicHelper implements View.OnClickListener, View.OnLongClickListen
         }
 
 
-    }
-
-    @Override
-    public boolean onLongClick(View v) {
-        final Field field = getFieldFromPrefs((SaperField) v);
-
-        if (field.isRevealed()) {
-            return true;
-        } else {
-            field.setMarked(!field.isMarked());
-        }
-
-        if (listener != null) {
-            listener.update(gameMode.getFields());
-        }
-
-        return true;
     }
 
     private int getNearBombs(Field field) {

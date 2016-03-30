@@ -62,24 +62,24 @@ public class NewGameFragment extends Fragment {
 
     private void startGame(int size) {
         final int bombs = Integer.parseInt(bombText.getText().toString());
-        GameMode mode = new GameMode(size, bombs > size*2 ? size*2 : bombs);
+        GameMode mode = new GameMode(size, bombs > size * 2 ? size * 2 : bombs);
         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.container, GameFragment.newInstance(mode)).commit();
     }
 
     private void decreaseBombs() {
         int i = Integer.parseInt(bombText.getText().toString());
-        if (i > 0) {
-            i --;
+        if (i - 1 > 0) {
+            i--;
         }
-        bombText.setText(i+"");
+        bombText.setText(i + "");
     }
 
     private void increaseBombs() {
         int i = Integer.parseInt(bombText.getText().toString());
         if (i != 0) {
-            i ++;
+            i++;
         }
-        bombText.setText(i+"");
+        bombText.setText(i + "");
 
     }
 

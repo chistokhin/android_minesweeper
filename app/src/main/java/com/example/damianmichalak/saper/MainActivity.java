@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
         final FloatingActionMenu fab = (FloatingActionMenu) findViewById(R.id.fab);
 
         if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.container, new NewGameFragment()).commit();
+            newGame();
         }
 
         findViewById(R.id.container).setOnClickListener(new View.OnClickListener() {
@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 fab.close(true);
-                getSupportFragmentManager().beginTransaction().replace(R.id.container, new NewGameFragment()).commit();
+                newGame();
             }
         });
 
@@ -66,6 +66,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    public int newGame() {
+        return getSupportFragmentManager().beginTransaction().replace(R.id.container, new NewGameFragment()).commit();
     }
 
 }

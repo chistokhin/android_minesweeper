@@ -10,22 +10,34 @@ import java.util.Random;
 
 public class GameMode implements Serializable {
 
-    private final int size;
-
-    public Field[][] getFields() {
-        return fields;
+    public enum State {
+        FAIL, SUCCESS, UNKNOWN
     }
 
+    private final int size;
+    private State state = State.UNKNOWN;
     private final int bombs;
-
     private Field[][] fields;
+    private List<Field> fieldsBombs = new ArrayList<>();
+
+    public List<Field> getFieldsBombs() {
+        return fieldsBombs;
+    }
 
     public int getSize() {
         return size;
     }
 
+    public void setState(State state) {
+        this.state = state;
+    }
+
     public int getBombs() {
         return bombs;
+    }
+
+    public Field[][] getFields() {
+        return fields;
     }
 
     public GameMode(int size, int bombs) {
@@ -50,6 +62,7 @@ public class GameMode implements Serializable {
             if (!bombList.contains(point)) {
                 bombList.add(point);
                 fields[x][y] = new Field(x, y, false, true, false);
+                fieldsBombs.add(fields[x][y]);
                 i ++;
             }
         }
@@ -63,5 +76,9 @@ public class GameMode implements Serializable {
         sb.append(", fields=").append(fields == null ? "null" : Arrays.asList(fields).toString());
         sb.append('}');
         return sb.toString();
+    }
+
+    public State getState() {
+        return state;
     }
 }

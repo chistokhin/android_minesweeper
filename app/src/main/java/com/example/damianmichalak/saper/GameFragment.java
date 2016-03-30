@@ -1,11 +1,14 @@
 package com.example.damianmichalak.saper;
 
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,7 +49,7 @@ public class GameFragment extends Fragment implements ViewTreeObserver.OnGlobalL
         rootView = (LinearLayout) inflater.inflate(R.layout.empty_container, container, false);
         gameMode = (GameMode) getArguments().getSerializable("GAME_MODE");
         rootView.getViewTreeObserver().addOnGlobalLayoutListener(this);
-        logicHelper = new LogicHelper(getActivity(), gameMode);
+        logicHelper = new LogicHelper(gameMode);
         logicHelper.setListener(this);
         return rootView;
     }
@@ -105,5 +108,40 @@ public class GameFragment extends Fragment implements ViewTreeObserver.OnGlobalL
                 saperFields.get(j + (i * gameMode.getSize())).update(fields[i][j]);
             }
         }
+    }
+
+    @Override
+    public void gameFail() {
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
+                .setTitle("Game over")
+                .setMessage("You clicked on a bomb.")
+                .setPositiveButton("Try again", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        ((MainActivity) getActivity()).newGame();
+                    }
+                });
+
+        builder.show();
+    }
+
+    @Override
+    public void gameSuccess() {
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
+                .setTitle("You win!")
+                .setMessage("You have found all the bombs.")
+                .setPositiveButton("Try again", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        ((MainActivity) getActivity()).newGame();
+                    }
+                });
+
+        builder.show();
+
     }
 }

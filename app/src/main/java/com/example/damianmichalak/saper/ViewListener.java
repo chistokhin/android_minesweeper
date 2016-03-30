@@ -6,4 +6,7 @@ public interface ViewListener {
 
     void update(Field[][] fields);
 
+    void gameFail();
+
+    void gameSuccess();
 }
