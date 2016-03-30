@@ -23,8 +23,17 @@ public class LogicHelper implements View.OnClickListener, View.OnLongClickListen
     @Override
     public void onClick(View v) {
         if (gameMode.getState() != GameMode.State.UNKNOWN) return;
+        gameMode.setStep(gameMode.getStep() + 1);
 
         final Field field = getFieldFromPrefs((SaperField) v);
+
+        if (field.isBomb() && gameMode.getStep() == 1) {
+            if (gameMode.reload()) {
+                gameMode.setStep(gameMode.getStep() - 1);
+                onClick(v);
+                return;
+            }
+        }
 
         if (!field.isMarked() && !field.isRevealed()) {
             if (!revealField(field)) {

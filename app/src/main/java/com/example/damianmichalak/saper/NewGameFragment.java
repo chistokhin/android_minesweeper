@@ -6,11 +6,14 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 public class NewGameFragment extends Fragment {
 
     private TextView bombText;
+    private boolean easyMode = false;
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -62,7 +65,7 @@ public class NewGameFragment extends Fragment {
 
     private void startGame(int size) {
         final int bombs = Integer.parseInt(bombText.getText().toString());
-        GameMode mode = new GameMode(size, bombs > size * 2 ? size * 2 : bombs);
+        final GameMode mode = new GameMode(size, bombs > size * 2 ? size * 2 : bombs);
         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.container, GameFragment.newInstance(mode)).commit();
     }
 
