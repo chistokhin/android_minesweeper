@@ -58,14 +58,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        findViewById(R.id.fab_undo).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                fab.close(true);
-                Toast.makeText(MainActivity.this, "undo move", Toast.LENGTH_SHORT).show();
-            }
-        });
-
     }
 
     public int newGame() {

@@ -77,16 +77,6 @@
             fab:fab_label="exit"
             fab:fab_size="mini"/>
 
-        <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/fab_undo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_undo"
-            fab:fab_colorNormal="@color/colorAccent"
-            fab:fab_colorPressed="@color/colorAccentSecondary"
-            fab:fab_label="undo"
-            fab:fab_size="mini"/>
-
     </com.github.clans.fab.FloatingActionMenu>
 
 </FrameLayout>
