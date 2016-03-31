@@ -59,6 +59,7 @@ public class LogicHelper implements View.OnClickListener, View.OnLongClickListen
             return true;
         } else {
             field.setMarked(!field.isMarked());
+            gameMode.setMarkedFields(gameMode.getMarkedFields() + (field.isMarked() ? 1 : -1));
         }
 
         if (listener != null) {
@@ -74,6 +75,7 @@ public class LogicHelper implements View.OnClickListener, View.OnLongClickListen
      * @return true if field is NOT A BOMB
      */
     private boolean revealField(Field field) {
+        if (field.isMarked()) return true;
         final int bombsNear = getNearBombs(field);
         field.setRevealed(true);
         field.setBombsNear(bombsNear);

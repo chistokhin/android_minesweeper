@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +26,8 @@ public class GameFragment extends Fragment implements ViewTreeObserver.OnGlobalL
     private boolean done = false;
     private LogicHelper logicHelper;
     private List<SaperField> saperFields = new ArrayList<>();
+    private TextView bombsLeft;
+    private TextView time;
 
     public static GameFragment newInstance(GameMode mode) {
 
@@ -45,12 +48,15 @@ public class GameFragment extends Fragment implements ViewTreeObserver.OnGlobalL
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        rootView = (LinearLayout) inflater.inflate(R.layout.empty_container, container, false);
+        final View view = inflater.inflate(R.layout.empty_container, container, false);
+        bombsLeft = ((TextView) view.findViewById(R.id.bombs_left));
+        time = ((TextView) view.findViewById(R.id.time));
+        rootView = (LinearLayout) view.findViewById(R.id.root_view);
         gameMode = (GameMode) getArguments().getSerializable("GAME_MODE");
         rootView.getViewTreeObserver().addOnGlobalLayoutListener(this);
         logicHelper = new LogicHelper(gameMode);
         logicHelper.setListener(this);
-        return rootView;
+        return view;
     }
 
     private void addFields(LinearLayout rootView) {
@@ -102,6 +108,7 @@ public class GameFragment extends Fragment implements ViewTreeObserver.OnGlobalL
 
     @Override
     public void update(Field[][] fields) {
+        bombsLeft.setText("" + gameMode.getNotMarkedBombs());
         for (int i = 0; i < gameMode.getSize(); i++) {
             for (int j = 0; j < gameMode.getSize(); j++) {
                 saperFields.get(j + (i * gameMode.getSize())).update(fields[i][j]);

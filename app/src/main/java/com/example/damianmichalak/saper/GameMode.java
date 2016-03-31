@@ -10,6 +10,7 @@ import java.util.Random;
 
 public class GameMode implements Serializable {
 
+
     public enum State {
         FAIL, SUCCESS, UNKNOWN
     }
@@ -19,6 +20,7 @@ public class GameMode implements Serializable {
     private final Field[][] fields;
     private List<Field> fieldsBombs = new ArrayList<>();
 
+    private int markedFields = 0;
     private int step = 0;
     private State state = State.UNKNOWN;
 
@@ -87,6 +89,10 @@ public class GameMode implements Serializable {
         return bombs;
     }
 
+    public int getNotMarkedBombs() {
+        return bombs - markedFields;
+    }
+
     public Field[][] getFields() {
         return fields;
     }
@@ -99,6 +105,14 @@ public class GameMode implements Serializable {
         sb.append(", fields=").append(fields == null ? "null" : Arrays.asList(fields).toString());
         sb.append('}');
         return sb.toString();
+    }
+
+    public void setMarkedFields(int markedFields) {
+        this.markedFields = markedFields;
+    }
+
+    public int getMarkedFields() {
+        return markedFields;
     }
 
     public State getState() {
