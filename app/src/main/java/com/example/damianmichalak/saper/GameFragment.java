@@ -149,4 +149,14 @@ public class GameFragment extends Fragment implements ViewTreeObserver.OnGlobalL
         builder.show();
 
     }
+
+    @Override
+    public void timeChanged(final int i) {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                time.setText("" + i);
+            }
+        });
+    }
 }

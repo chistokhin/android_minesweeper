@@ -23,7 +23,7 @@ public class GameMode implements Serializable {
     private int markedFields = 0;
     private int step = 0;
     private State state = State.UNKNOWN;
-
+    private long startTime;
     private int reloadedTimes = 0;
 
     public GameMode(int size, int bombs) {
@@ -97,6 +97,14 @@ public class GameMode implements Serializable {
         return fields;
     }
 
+    public long getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(long startTime) {
+        this.startTime = startTime;
+    }
+
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("GameMode{");
@@ -104,6 +112,7 @@ public class GameMode implements Serializable {
         sb.append(", bombs=").append(bombs);
         sb.append(", fields=").append(fields == null ? "null" : Arrays.asList(fields).toString());
         sb.append('}');
+
         return sb.toString();
     }
 

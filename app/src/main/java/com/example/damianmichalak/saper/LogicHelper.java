@@ -4,11 +4,15 @@ import android.view.View;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 @SuppressWarnings("ConstantConditions")
 public class LogicHelper implements View.OnClickListener, View.OnLongClickListener {
 
     private GameMode gameMode;
+    private TimerTask timerTask;
+    private Timer timer;
 
     public void setListener(ViewListener listener) {
         this.listener = listener;
@@ -16,14 +20,40 @@ public class LogicHelper implements View.OnClickListener, View.OnLongClickListen
 
     private ViewListener listener;
 
-    public LogicHelper(GameMode gameMode) {
+    public LogicHelper(final GameMode gameMode) {
         this.gameMode = gameMode;
+        setupTimer();
+    }
+
+    private void setupTimer() {
+        timer = null;
+        timerTask = null;
+
+        timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                if (listener != null && gameMode.getState() == GameMode.State.UNKNOWN) {
+                    final long diff = System.currentTimeMillis() - gameMode.getStartTime();
+                    listener.timeChanged((int) (diff / 1000));
+                }
+            }
+        };
+        timer = new Timer();
+
+        if (gameMode.getStep() > 0) {
+            timer.schedule(timerTask, 0, 1000);
+        }
     }
 
     @Override
     public void onClick(View v) {
         if (gameMode.getState() != GameMode.State.UNKNOWN) return;
         gameMode.setStep(gameMode.getStep() + 1);
+
+        if (gameMode.getStep() == 1) {
+            gameMode.setStartTime(System.currentTimeMillis());
+            setupTimer();
+        }
 
         final Field field = getFieldFromPrefs((SaperField) v);
 
