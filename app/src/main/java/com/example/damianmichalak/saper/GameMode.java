@@ -64,7 +64,7 @@ public class GameMode implements Serializable {
     public boolean reload() {
         calculateBombs(size, bombs);
         reloadedTimes ++;
-        if (reloadedTimes > 100) {
+        if (reloadedTimes > 200) {
             return false;
         } else {
             return true;

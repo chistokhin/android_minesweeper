@@ -86,13 +86,6 @@ public class LogicHelper implements View.OnClickListener, View.OnLongClickListen
     private void checkAllBombsDetected() {
         boolean allBombsDetected = true;
 
-        for (Field field : gameMode.getFieldsBombs()) {
-            if (!field.isMarked()) {
-                allBombsDetected = false;
-                break;
-            }
-        }
-
         for (int i = 0; i < gameMode.getSize(); i++) {
             for (int j = 0; j < gameMode.getSize(); j++) {
                 if (!gameMode.getFields()[i][j].isBomb() && !gameMode.getFields()[i][j].isRevealed()) {
@@ -103,9 +96,19 @@ public class LogicHelper implements View.OnClickListener, View.OnLongClickListen
         }
 
         if (allBombsDetected) {
+            revealAllFields();
             gameMode.setState(GameMode.State.SUCCESS);
             listener.gameSuccess();
         }
+    }
+
+    private void revealAllFields() {
+        for (int i = 0; i < gameMode.getSize(); i++) {
+            for (int j = 0; j < gameMode.getSize(); j++) {
+                revealField(gameMode.getFields()[i][j]);
+            }
+        }
+        listener.update(gameMode.getFields());
     }
 
     private void revealNearFields(Field field) {
@@ -125,6 +128,18 @@ public class LogicHelper implements View.OnClickListener, View.OnLongClickListen
 
         if (field.getY() + 1 < gameMode.getSize())
             nears.add(gameMode.getFields()[field.getX()][field.getY() + 1]);
+
+        if (field.getX() - 1 >= 0 && field.getY() - 1 >= 0)
+            nears.add(gameMode.getFields()[field.getX() - 1][field.getY() - 1]);
+
+        if (field.getX() - 1 >= 0 && field.getY() + 1 < gameMode.getSize())
+            nears.add(gameMode.getFields()[field.getX() - 1][field.getY() + 1]);
+
+        if (field.getX() + 1 < gameMode.getSize() && field.getY() - 1 >= 0)
+            nears.add(gameMode.getFields()[field.getX() + 1][field.getY() - 1]);
+
+        if (field.getX() + 1 < gameMode.getSize() && field.getY() + 1 < gameMode.getSize())
+            nears.add(gameMode.getFields()[field.getX() + 1][field.getY() + 1]);
 
         for (Field f : nears) {
             if (!f.isRevealed() && !f.isMarked()) {

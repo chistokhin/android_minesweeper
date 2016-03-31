@@ -2,11 +2,11 @@ package com.example.damianmichalak.saper;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionMenu;
 
@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
         final FloatingActionMenu fab = (FloatingActionMenu) findViewById(R.id.fab);
 
         if (savedInstanceState == null) {
-            newGame();
+            showNewGameFragment();
         }
 
         findViewById(R.id.container).setOnClickListener(new View.OnClickListener() {
@@ -54,14 +54,34 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 fab.close(true);
-                newGame();
+                showNewGameFragment();
             }
         });
 
     }
 
-    public int newGame() {
+    @Override
+    public void onBackPressed() {
+        final Fragment fragment = getSupportFragmentManager().getFragments().get(0);
+        if (fragment instanceof CustomGameFragment) {
+            showNewGameFragment();
+        } else if (fragment instanceof GameFragment) {
+            showNewGameFragment();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    public int showNewGameFragment() {
         return getSupportFragmentManager().beginTransaction().replace(R.id.container, new NewGameFragment()).commit();
     }
 
+    public void startGame(int size, int bombs) {
+        final GameMode mode = new GameMode(size, bombs);
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, GameFragment.newInstance(mode)).commit();
+    }
+
+    public void customGame() {
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, CustomGameFragment.newInstance()).commit();
+    }
 }

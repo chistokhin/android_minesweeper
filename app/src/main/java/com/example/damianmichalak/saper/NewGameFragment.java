@@ -6,84 +6,47 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.TextView;
 
 public class NewGameFragment extends Fragment {
 
-    private TextView bombText;
-    private boolean easyMode = false;
+    private MainActivity activity;
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        getActivity().setTitle("New game");
-
-        bombText = (TextView) view.findViewById(R.id.bombs_text);
-        bombText.setText("1");
+        activity = (MainActivity) getActivity();
+        activity.setTitle("Saper");
 
         view.findViewById(R.id.new_game_easy).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().setTitle("small");
-                startGame(5);
+                activity.setTitle("easy game");
+                activity.startGame(5, 5);
             }
         });
 
         view.findViewById(R.id.new_game_medium).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().setTitle("medium");
-                startGame(10);
+                activity.setTitle("medium game");
+                activity.startGame(10, 15);
             }
         });
 
         view.findViewById(R.id.new_game_hard).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().setTitle("big");
-                startGame(15);
+                activity.setTitle("hard game");
+                activity.startGame(20, 40);
             }
         });
 
-        view.findViewById(R.id.bombs_plus).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.new_game_custom).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                increaseBombs();
+                activity.customGame();
             }
         });
-
-        view.findViewById(R.id.bombs_minus).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                decreaseBombs();
-            }
-        });
-
-    }
-
-    private void startGame(int size) {
-        final int bombs = Integer.parseInt(bombText.getText().toString());
-        final GameMode mode = new GameMode(size, bombs > size * 2 ? size * 2 : bombs);
-        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.container, GameFragment.newInstance(mode)).commit();
-    }
-
-    private void decreaseBombs() {
-        int i = Integer.parseInt(bombText.getText().toString());
-        if (i - 1 > 0) {
-            i--;
-        }
-        bombText.setText(i + "");
-    }
-
-    private void increaseBombs() {
-        int i = Integer.parseInt(bombText.getText().toString());
-        if (i != 0) {
-            i++;
-        }
-        bombText.setText(i + "");
-
     }
 
     @Nullable

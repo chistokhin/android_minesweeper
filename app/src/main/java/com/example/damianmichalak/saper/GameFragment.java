@@ -119,7 +119,7 @@ public class GameFragment extends Fragment implements ViewTreeObserver.OnGlobalL
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                        ((MainActivity) getActivity()).newGame();
+                        ((MainActivity) getActivity()).showNewGameFragment();
                     }
                 });
 
@@ -131,12 +131,11 @@ public class GameFragment extends Fragment implements ViewTreeObserver.OnGlobalL
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
                 .setTitle("You win!")
-                .setMessage("You have found all the bombs.")
-                .setPositiveButton("Try again", new DialogInterface.OnClickListener() {
+                .setMessage("You have found all the bombs!")
+                .setPositiveButton("I'm so happy", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                        ((MainActivity) getActivity()).newGame();
                     }
                 });
 
